@@ -1,77 +1,48 @@
 import { connection as db } from "../config/index.js";
 
-class ProductService {
-    static getAllProducts(req, res) {
-        const sql = `
-        SELECT ID, ProductName, quantity, price
-        FROM products;
-        `;
-        db.query(sql, (error, results) => {
-            if (error) {
-                return res.status(500).json({ error: error.message });
-            }
-            res.status(200).json({ status: "success", data: results });
-        });
+
+class Products {
+  
+    fetchProducts(req, res) {
+        try {
+            const strQry = `
+            SELECT ID, ProductName, quantity, price FROM products;
+            `;
+            db.query(strQry, (err, results) => {
+                if (err) throw new Error('Unable to fetch products');
+                res.json({
+                    status: res.statusCode,
+                    results
+                });
+            });
+        } catch (e) {
+            res.json({
+                status: 404,
+                msg: e.message
+            });
+        }
     }
 
-    static getProductById(req, res) {
-        const sql = `
-        SELECT ID, ProductName, quantity, price
-        FROM products
-        WHERE ID = ?;
-        `;
-        db.query(sql, [req.params.id], (error, result) => {
-            if (error) {
-                return res.status(500).json({ error: error.message });
-            }
-            if (result.length === 0) {
-                return res.status(404).json({ message: "Product not found" });
-            }
-            res.status(200).json({ status: "success", data: result[0] });
-        });
-    }
-
-    static createProduct(req, res) {
-        const sql = `
-        INSERT INTO products (ProductName, quantity, price)
-        VALUES (?, ?, ?);
-        `;
-        const { ProductName, quantity, price } = req.body;
-        db.query(sql, [ProductName, quantity, price], (error) => {
-            if (error) {
-                return res.status(500).json({ error: error.message });
-            }
-            res.status(201).json({ status: "success", message: "Product added successfully" });
-        });
-    }
-
-    static updateProduct(req, res) {
-        const sql = `
-        UPDATE products
-        SET ProductName = ?, quantity = ?, price = ?
-        WHERE ID = ?;
-        `;
-        const { ProductName, quantity, price } = req.body;
-        db.query(sql, [ProductName, quantity, price, req.params.id], (error) => {
-            if (error) {
-                return res.status(500).json({ error: error.message });
-            }
-            res.status(200).json({ status: "success", message: "Product updated successfully" });
-        });
-    }
-
-    static deleteProduct(req, res) {
-        const sql = `
-        DELETE FROM products
-        WHERE ID = ?;
-        `;
-        db.query(sql, [req.params.id], (error) => {
-            if (error) {
-                return res.status(500).json({ error: error.message });
-            }
-            res.status(200).json({ status: "success", message: "Product deleted successfully" });
-        });
+    addProduct(req, res) {
+        try {
+            const strQry = `
+            INSERT INTO products SET ?;
+            `;
+            db.query(strQry, [req.body.ProductName, req.body.quantity, req.body.price], (err) => {
+                if (err) throw new Error('Unable to add a new product');
+                res.json({
+                    status: res.statusCode,
+                    msg: 'Product was added'
+                });
+            });
+        } catch (e) {
+            res.json({
+                status: 404,
+                msg: e.message
+            });
+        }
     }
 }
 
-export { ProductService };
+export { Products };
+
