@@ -1,65 +1,61 @@
-import express from 'express'
-import { Products } from '../model/product.js'
-import bodyParser from 'body-parser'
+import { Router } from "express";
+import product from "../model/product.js";
 
-const productsRouter = express.Router()
-productsRouter.use(bodyParser.json())
+const productsRouter = Router();
 
-productsRouter.get('/', (req, res)=>{
-    try{
-        Products.fetchProducts(req, res)
-    }catch(e) {
-        res.json({
-            status: res.statusCode,
-            msg: 'Failed to get products'
-        })
-    }
-})
+productsRouter.get("/", (req, res) => {
+  try {
+    product.fetchProducts(req, res);
+  } catch (e) {
+    res.json({
+      status: res.statusCode,
+      msg: "Failed to get products",
+    });
+  }
+});
 
-productsRouter.get('/:id', (req, res)=>{
-    try{
-        products.fetchProduct(req, res)
-    }catch(e) {
-        res.json({
-            status: res.statusCode,
-            msg: 'Failed to get a product'
-        })
-    }
-})
+// productsRouter.get("/:id", (req, res) => {
+//   try {
+//     product.fetchProduct(req, res);
+//   } catch (e) {
+//     res.json({
+//       status: res.statusCode,
+//       msg: "Failed to get a product",
+//     });
+//   }
+// });
 
-productsRouter.post('/addProduct', bodyParser.json(), (req, res)=>{
-    try{
-        Products.addProduct(req, res)
-    }catch(e) {
-        res.json({
-            status: res.statusCode,
-            msg: 'Failed to add a new product.'
-        })
-    }
-})
+// productsRouter.post("/addProduct", (req, res) => {
+//   try {
+//     Products.addProduct(req, res);
+//   } catch (e) {
+//     res.json({
+//       status: res.statusCode,
+//       msg: "Failed to add a new product.",
+//     });
+//   }
+// });
 
-productsRouter.patch('/update/:id', bodyParser.json(), (req, res)=>{
-    try{
-        Products.updateProduct(req, res)
-    }catch(e) {
-        res.json({
-            status: res.statusCode,
-            msg: "Failed to update a product."
-        })
-    }
-})
+// productsRouter.patch("/update/:id", (req, res) => {
+//   try {
+//     Products.updateProduct(req, res);
+//   } catch (e) {
+//     res.json({
+//       status: res.statusCode,
+//       msg: "Failed to update a product.",
+//     });
+//   }
+// });
 
-productsRouter.delete('/delete/:id', (req, res)=>{
-    try{
-        Products.deleteProduct(req, res)
-    }catch(e) {
-        res.json({
-            status: res.statusCode,
-            msg: "Failed to delete a product."
-        })
-    }
-})
+// productsRouter.delete("/delete/:id", (req, res) => {
+//   try {
+//     Products.deleteProduct(req, res);
+//   } catch (e) {
+//     res.json({
+//       status: res.statusCode,
+//       msg: "Failed to delete a product.",
+//     });
+//   }
+// });
 
-export{
-    productsRouter
-}
+export { productsRouter };
