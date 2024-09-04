@@ -1,7 +1,5 @@
 <template>
   <div class="login-body">
-   
-
     <div class="login-container">
       <h1 class="login-title">Login</h1>
       <form @submit.prevent="loginUser">
@@ -31,7 +29,6 @@ export default {
 
 <style scoped>
 .login-body {
-  /* margin-top: 80px; */
   display: flex;
   flex-direction: column;
   align-items: center;
