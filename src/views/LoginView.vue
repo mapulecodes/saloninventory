@@ -1,7 +1,5 @@
 <template>
   <div class="login-body">
-   
-
     <div class="login-container">
       <h1 class="login-title">Login</h1>
       <form @submit.prevent="loginUser">
@@ -9,6 +7,12 @@
         <input type="password" placeholder="Password" v-model="user_password" />
         <button type="submit" class="btn-text">Login</button>
       </form>
+
+      <div class="register-link">
+        <p>Don't have an account? 
+          <button @click="goToRegister" class="btn-register">Register</button>
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -22,8 +26,24 @@ export default {
     };
   },
   methods: {
-    loginUser() {
-      this.$store.dispatch('loginUser', this.$data);
+    async loginUser() {
+      try {
+        const response = await this.$store.dispatch('loginUser', this.$data);
+
+        
+        if (!response || response.status === 404) {
+          this.$router.push('/register'); 
+        } else {
+          
+          this.$router.push('/dashboard');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        
+      }
+    },
+    goToRegister() {
+      this.$router.push('/register'); 
     }
   }
 };
@@ -38,7 +58,6 @@ export default {
   height: 100vh;
   background: linear-gradient(to right, #001f4d, #666e7a, #3f1d5a); 
 }
-
 
 .login-container {
   width: 400px;
@@ -59,12 +78,9 @@ export default {
 input[type="email"],
 input[type="password"] {
   width: 100%;
-  /* padding: 12px; */
   margin-bottom: 15px;
   border: none;
   border-bottom: 2px solid #666e7a;
-  /* box-sizing: border-box;
-  background-color: #f8f9fa; */
 }
 
 input:focus {
@@ -72,7 +88,7 @@ input:focus {
   outline: none;
 }
 
-.btn-text {
+.btn-text, .btn-register {
   background: none;
   border: none;
   color: #554671;
@@ -81,11 +97,19 @@ input:focus {
   text-decoration: underline;
 }
 
-.btn-text:hover {
+.btn-text:hover, .btn-register:hover {
   color: #666e7a;
 }
 
 input::placeholder {
   color: #666e7a;
+}
+
+.register-link {
+  margin-top: 15px;
+}
+
+.register-link p {
+  color: #000; 
 }
 </style>
