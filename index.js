@@ -3,6 +3,8 @@ import express from "express";
 import 'dotenv/config'
 import { productsRouter } from "./controller/ProductsController.js";
 import { errorHandling } from "./middleware/ErrorHandling.js";
+import  {usersRouter} from "./controller/UsersController.js";
+
 
 const app = express();
 const port = +process.env.PORT || 3001;
@@ -19,6 +21,7 @@ app.use(express.static("./static"));
 
 //endpoints
 app.use("/products", productsRouter);
+app.use("/users", usersRouter);
 
 app.get("^/$|eshop", (req, res) => {
   res.status(200).sendFile(path.resolve("./static/html/index.html"));

@@ -15,7 +15,7 @@ class Users {
                 if (err)
                     return res.status(500).json({
                         status: res.statusCode,
-                        message: err.message,
+                        message: 'in query',
                     });
 
                 if (results.length === 0) {
@@ -33,7 +33,7 @@ class Users {
         } catch (e) {
             res.status(404).json({
                 status: res.statusCode,
-                msg: e.message,
+                msg: 'in catch',
             });
         }
     }
