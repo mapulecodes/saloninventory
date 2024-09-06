@@ -10,10 +10,9 @@
         <button type="submit" class="btn-text">Register</button>
       </form>
 
-      <div class="login-section">
-        <p>Already a member? 
-          <button @click="goToLogin" class="btn-login">Login</button>
-        </p>
+      <div class="login-link">
+        <span>Already a member?</span>
+        <router-link to="/login" class="btn-text">Login</router-link>
       </div>
     </div>
   </div>
@@ -30,15 +29,42 @@ export default {
     };
   },
   methods: {
-    registerUser() {
-      if (this.user_password === this.user_confirm_password) {
-        this.$store.dispatch('registerUser', this.$data);
-      } else {
+    async registerUser() {
+      // Validate password match
+      if (this.user_password !== this.user_confirm_password) {
         alert('Passwords do not match');
+        return;
       }
-    },
-    goToLogin() {
-      this.$router.push('/login');  // Navigate to login page
+
+      // Prepare user data
+      const userData = {
+        name: this.user_name,
+        email: this.user_email,
+        password: this.user_password
+      };
+
+      try {
+        // Send user data to the backend (adjust the URL to match your API)
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(userData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // On successful registration, redirect to the dashboard
+          this.$router.push('/dashboard');
+        } else {
+          // Handle error (e.g. user already exists)
+          alert(result.message || 'Registration failed');
+        }
+      } catch (error) {
+        alert('An error occurred during registration');
+      }
     }
   }
 };
@@ -85,7 +111,7 @@ input:focus {
   outline: none;
 }
 
-.btn-text, .btn-login {
+.btn-text {
   background: none;
   border: none;
   color: #554671;
@@ -94,19 +120,16 @@ input:focus {
   text-decoration: underline;
 }
 
-.btn-text:hover, .btn-login:hover {
+.btn-text:hover {
   color: #666e7a;
 }
 
-.login-section {
-  margin-top: 15px;
-}
-
-.login-section p {
-  color: #000; /* Match the text color */
+.login-link {
+  margin-top: 20px;
 }
 
 input::placeholder {
   color: #666e7a;
 }
 </style>
+

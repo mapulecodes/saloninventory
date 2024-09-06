@@ -16,7 +16,7 @@
             <router-link class="nav-link text-white" to="/about">About</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link text-white" to="/contact">Contact Us</router-link>
+            <router-link class="nav-link text-white" to="/dashboard">Dashboard</router-link>  
           </li>
         </ul>
         <div class="d-flex">
