@@ -1,15 +1,19 @@
 import { Router } from "express";
 import user from "../model/user.js";
 
-const usersRouter = Router();
+const usersRouter =   Router();
+
+
 
 usersRouter.get("/", (req, res) => {
   user.fetchUsers(req, res);
 });
 
+
 usersRouter.get("/:id", (req, res) => {
-  user.fetchUsers(req, res);
+  user.fetchUser(req, res); 
 });
+
 
 usersRouter.post("/addUser", (req, res) => {
   user.addUser(req, res);

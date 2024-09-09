@@ -12,60 +12,151 @@ class Users {
                 FROM users;
             `;
             db.query(strQry, (err, results) => {
-                if (err)
+                if (err) {
                     return res.status(500).json({
                         status: res.statusCode,
-                        message: 'in query',
-                    });
-
-                if (results.length === 0) {
-                    return res.status(404).json({ 
-                        status: res.statusCode, 
-                        message: "No users found" 
+                        message: 'Unable to fetch users',
+                        error: err.message
                     });
                 }
 
-                res.status(200).json({ 
-                    status: res.statusCode, 
-                    results 
+                if (results.length === 0) {
+                    return res.status(404).json({
+                        status: res.statusCode,
+                        message: 'No users found',
+                    });
+                }
+
+                res.status(200).json({
+                    status: res.statusCode,
+                    results,
                 });
             });
         } catch (e) {
-            res.status(404).json({
+            res.status(500).json({
                 status: res.statusCode,
-                msg: 'in catch',
+                message: 'Server error',
+                error: e.message
             });
         }
     }
 
-    async addUser(req, res) {
+    async fetchUser(req, res) {
         try {
+            const userId = req.params.id;
             const strQry = `
-                INSERT INTO users SET ?;
+                SELECT 
+                    ID,
+                    UserName,
+                    UserRole,
+                    UserEmail
+                FROM users
+                WHERE ID = ?;
             `;
-            const userData = {
-                UserName: req.body.UserName,
-                UserRole: req.body.UserRole,
-                UserEmail: req.body.UserEmail,
-                UserPassword: req.body.UserPassword,
-            };
-
-            db.query(strQry, userData, (err) => {
-                if (err)
+            db.query(strQry, [userId], (err, results) => {
+                if (err) {
                     return res.status(500).json({
                         status: res.statusCode,
-                        message: "Unable to add a new user",
+                        message: 'Unable to fetch user',
+                        error: err.message
                     });
+                }
 
-                res.json({
+                if (results.length === 0) {
+                    return res.status(404).json({
+                        status: res.statusCode,
+                        message: `User with ID ${userId} not found`,
+                    });
+                }
+
+                res.status(200).json({
                     status: res.statusCode,
-                    msg: "User was added successfully",
+                    result: results[0],
                 });
             });
         } catch (e) {
-            res.status(404).json({
+            res.status(500).json({
                 status: res.statusCode,
-                msg: e.message,
+                message: 'Server error',
+                error: e.message
+            });
+        }
+    }
+
+    async updateUser(req, res) {
+        try {
+            const userId = req.params.id;
+            const strQry = `
+                UPDATE users
+                SET UserName = ?, UserRole = ?, UserEmail = ?, UserPassword = ?
+                WHERE ID = ?;
+            `;
+            const { UserName, UserRole, UserEmail, UserPassword } = req.body;
+            db.query(strQry, [UserName, UserRole, UserEmail, UserPassword, userId], (err, results) => {
+                if (err) {
+                    return res.status(500).json({
+                        status: res.statusCode,
+                        message: 'Unable to update user',
+                        error: err.message
+                    });
+                }
+
+                if (results.affectedRows === 0) {
+                    return res.status(404).json({
+                        status: res.statusCode,
+                        message: 'User not found',
+                    });
+                }
+
+                res.json({
+                    status: res.statusCode,
+                    message: 'User updated successfully',
+                });
+            });
+        } catch (e) {
+            res.status(500).json({
+                status: res.statusCode,
+                message: 'Server error',
+                error: e.message
+            });
+        }
+    }
+
+    async deleteUser(req, res) {
+        try {
+            const userId = req.params.id;
+            const strQry = `
+                DELETE FROM users
+                WHERE ID = ?;
+            `;
+            db.query(strQry, [userId], (err, results) => {
+                if (err) {
+                    console.error('Error executing delete query:', err.message);
+                    return res.status(500).json({
+                        status: res.statusCode,
+                        message: 'Unable to delete user',
+                        error: err.message
+                    });
+                }
+
+                if (results.affectedRows === 0) {
+                    return res.status(404).json({
+                        status: res.statusCode,
+                        message: 'User not found',
+                    });
+                }
+
+                res.json({
+                    status: res.statusCode,
+                    message: 'User deleted successfully',
+                });
+            });
+        } catch (e) {
+            console.error('Server error:', e.message);
+            res.status(500).json({
+                status: res.statusCode,
+                message: 'Server error',
+                error: e.message
             });
         }
     }
