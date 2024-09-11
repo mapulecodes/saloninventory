@@ -1,39 +1,44 @@
 import path from "path";
 import express from "express";
-import 'dotenv/config'
+import cors from "cors";
+import 'dotenv/config';
 import { productsRouter } from "./controller/ProductsController.js";
+import { usersRouter } from "./controller/UsersController.js";
 import { errorHandling } from "./middleware/ErrorHandling.js";
-import  {usersRouter} from "./controller/UsersController.js";
-
 
 const app = express();
-const port = +process.env.PORT || 3001;
+const port = process.env.PORT || 3001;
 
-app.use((req, res, next) => {
-  res.header("Access-control-Allow-Origin", "*");
-  next();
-});
+// CORS middleware
+app.use(cors({
+  origin: '*', // Allow all origins or specify your allowed origins
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type'],
+}));
 
-//middleware stuff
+// Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("./static"));
+app.use(express.static(path.join(process.cwd(), "static"))); // Ensure static files are served correctly
 
-//endpoints
+// Endpoints
 app.use("/products", productsRouter);
 app.use("/users", usersRouter);
 
-app.get("^/$|eshop", (req, res) => {
-  res.status(200).sendFile(path.resolve("./static/html/index.html"));
+// Serve static HTML
+app.get("^/$|/eshop", (req, res) => {
+  res.status(200).sendFile(path.join(process.cwd(), "static", "html", "index.html"));
 });
 
-app.get("*", (req, res) => {
-  res.status(404).json({ status: res.sendStatus, msg: "resource not nound" });
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ status: 404, msg: "Resource not found" });
 });
 
+// Error handling middleware
 app.use(errorHandling);
 
-//start the server
+// Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
