@@ -30,6 +30,11 @@ const routes = [
     name: 'inventory',
     component: () => import('@/views/InventoryView.vue')
   },
+  {
+    path: '/aboutus',
+    name: 'aboutus',
+    component: () => import('@/views/AboutusView.vue')
+  },
   
 ]
 

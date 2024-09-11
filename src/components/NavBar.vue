@@ -13,7 +13,7 @@
             <router-link class="nav-link text-white" to="/" exact active-class="router-link-active">Home</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link text-white" to="/about">About</router-link>
+            <router-link class="nav-link text-white" to="/aboutus">About Us</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link text-white" to="/dashboard">Dashboard</router-link>  
@@ -33,7 +33,7 @@
 
 <style scoped>
 .gradient-navbar {
-  background: linear-gradient(to right, #666e7a, #554671);
+  background: linear-gradient(to right,#e98aca,#3f1d5a); 
 }
 
 .navbar-brand .logo {

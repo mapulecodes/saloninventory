@@ -150,10 +150,10 @@ export default {
 
 .side-nav {
   position: fixed;
-  top: 60px; /* Adjust based on top-nav height */
+  top: 60px; 
   left: 0;
   width: 200px;
-  height: calc(100% - 60px); /* Adjust based on top-nav height */
+  height: calc(100% - 60px); 
   background-color: #001f4d;
   padding-top: 20px;
 }
@@ -180,8 +180,8 @@ export default {
 }
 
 .main-content {
-  margin-top: 60px; /* Adjust based on top-nav height */
-  margin-left: 200px; /* Adjust based on side-nav width */
+  margin-top: 60px; 
+  margin-left: 200px; 
   padding: 20px;
   flex-grow: 1;
 }
