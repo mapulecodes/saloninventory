@@ -43,12 +43,30 @@
       <h2>Welcome to the Dashboard</h2>
       <div class="dashboard-cards">
         <div class="card">
-          <h3>Inventory</h3>
-          <p>Manage your inventory here.</p>
+          <h3>Products</h3>
+          <div v-if="products.length > 0">
+            <div v-for="product in products" :key="product.ID">
+              <h4>{{ product.ProductName }}</h4>
+              <p>Quantity: {{ product.quantity }}</p>
+              <p>Price: ${{ product.price }}</p>
+            </div>
+          </div>
+          <div v-else>
+            <p>No products available.</p>
+          </div>
         </div>
         <div class="card">
-          <h3>Team</h3>
-          <p>View your team members here.</p>
+          <h3>Users</h3>
+          <div v-if="users.length > 0">
+            <div v-for="user in users" :key="user.ID">
+              <h4>{{ user.UserName }}</h4>
+              <p>Role: {{ user.UserRole }}</p>
+              <p>Email: {{ user.UserEmail }}</p>
+            </div>
+          </div>
+          <div v-else>
+            <p>No users available.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -56,26 +74,37 @@
 </template>
 
 <script>
+import { mapGetters, mapActions, mapState } from 'vuex';
+
 export default {
-  data() {
-    return {
-      user: {
-        name: 'John Doe', // Replace with actual user data
-      },
-    };
-  },
+  name: 'DashboardView',
   computed: {
-    getUserInitial() {
-      return this.user.name.charAt(0).toUpperCase();
+    ...mapState(['products']),
+    ...mapGetters(['recentProducts', 'allUsers']),
+    products() {
+      return this.$store.getters.recentProducts || [];
     },
+    users() {
+      return this.$store.getters.allUsers || [];
+    },
+    getUserInitial() {
+      return this.$store.getters.currentUser?.name.charAt(0).toUpperCase() || '';
+    }
   },
+  methods: {
+    ...mapActions(['fetchProducts', 'fetchUsers']),
+  },
+  mounted() {
+    this.fetchProducts();
+    this.fetchUsers();
+  }
 };
 </script>
 
 <style scoped>
 .dashboard-container {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .top-nav {
@@ -169,6 +198,3 @@ export default {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
-
-
-

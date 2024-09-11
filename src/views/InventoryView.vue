@@ -48,7 +48,7 @@
     data() {
       return {
         user: {
-          name: 'John Doe', // Remeber to add  actual user data
+          name: 'John Doe', 
         },
         searchQuery: '',
         products: [
