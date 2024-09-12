@@ -40,11 +40,11 @@ const routes = [
     name: 'contactus',
     component: () => import('@/views/ContactUsView.vue')
   },
-  // {
-  //   path: '/shiftschedule',
-  //   name: 'shiftschedule',
-  //   component: () => import('@/views/ShiftScheduleView.vue')
-  // },
+  {
+    path: '/shiftschedule',
+    name: 'shiftschedule',
+    component: () => import('@/views/ShiftScheduleView.vue')
+  },
   
 
 ]
