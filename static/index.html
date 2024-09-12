@@ -111,5 +111,43 @@
         </tbody>
     </table>
 
+    <h2>Customers</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>HTTP Methods</th>
+                <th>Path</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>GET</td>
+                <td>/customers</td>
+                <td>Retrieve all customers</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/customers/:id</td>
+                <td>Retrieve a specific customer by ID</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/customers/register</td>
+                <td>Add a new customer</td>
+            </tr>
+            <tr>
+                <td>PATCH/PUT</td>
+                <td>/customers/update/:id</td>
+                <td>Update customer information by ID</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/customers/delete/:id</td>
+                <td>Delete a customer by ID</td>
+            </tr>
+        </tbody>
+    </table>
+
 </body>
 </html>
