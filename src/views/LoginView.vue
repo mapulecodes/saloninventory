@@ -27,19 +27,34 @@ export default {
   },
   methods: {
     async loginUser() {
-      try {
-        const response = await this.$store.dispatch('loginUser', this.$data);
+      const userData = {
+        email: this.user_email,
+        password: this.user_password
+      };
 
-        
-        if (!response || response.status === 404) {
-          this.$router.push('/register'); 
-        } else {
-          
+      try {
+        // Send user data to the backend (adjust the URL to match your API)
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(userData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // On successful login, store token or user data and redirect to the dashboard
+          localStorage.setItem('token', result.token); // Assuming token is returned from the API
           this.$router.push('/dashboard');
+        } else {
+          // Handle invalid login credentials
+          alert(result.message || 'Login failed. Please check your credentials.');
         }
       } catch (error) {
         console.error('Login error:', error);
-        
+        alert('An error occurred during login');
       }
     },
     goToRegister() {

@@ -10,10 +10,14 @@
         <button type="submit" class="btn-text">Register</button>
       </form>
 
+      <!-- Login for existing users -->
       <div class="login-link">
-        <span>Already a member?</span>
+        <span style="color: black">Already a member?</span>
         <router-link to="/login" class="btn-text">Login</router-link>
       </div>
+
+      <!-- Login as Guest Button -->
+      <button @click="loginAsGuest" class="btn-guest">Login as Guest</button>
     </div>
   </div>
 </template>
@@ -30,13 +34,13 @@ export default {
   },
   methods: {
     async registerUser() {
-      // Validate password match
+      
       if (this.user_password !== this.user_confirm_password) {
         alert('Passwords do not match');
         return;
       }
 
-      // Prepare user data
+    
       const userData = {
         name: this.user_name,
         email: this.user_email,
@@ -44,7 +48,7 @@ export default {
       };
 
       try {
-        // Send user data to the backend (adjust the URL to match your API)
+        
         const response = await fetch('/api/register', {
           method: 'POST',
           headers: {
@@ -56,15 +60,20 @@ export default {
         const result = await response.json();
 
         if (response.ok) {
-          // On successful registration, redirect to the dashboard
+          
           this.$router.push('/dashboard');
         } else {
-          // Handle error (e.g. user already exists)
+          
           alert(result.message || 'Registration failed');
         }
       } catch (error) {
         alert('An error occurred during registration');
       }
+    },
+    loginAsGuest() {
+      
+      localStorage.setItem('isGuest', true); 
+      this.$router.push('/dashboard'); 
     }
   }
 };
@@ -124,6 +133,23 @@ input:focus {
   color: #666e7a;
 }
 
+.btn-guest {
+  margin-top: 20px;
+  background-color: #f0f0f0;
+  border: 1px solid #666e7a;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #666e7a;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-guest:hover {
+  background-color: #666e7a;
+  color: #fff;
+}
+
 .login-link {
   margin-top: 20px;
 }
@@ -132,4 +158,3 @@ input::placeholder {
   color: #666e7a;
 }
 </style>
-
