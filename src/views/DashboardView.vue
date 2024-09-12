@@ -30,10 +30,11 @@
           </router-link>
         </li>
         <li>
-          <router-link to="/dashboard/scheduling">
-            <i class="fas fa-calendar-alt"></i> Schedule Shifts
-          </router-link>
-        </li>
+  <router-link to="/shiftschedule">
+    <i class="fas fa-calendar-alt"></i> Schedule Shifts
+  </router-link>
+</li>
+
       </ul>
     </aside>
 

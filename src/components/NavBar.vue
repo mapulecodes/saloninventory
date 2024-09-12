@@ -16,6 +16,9 @@
             <router-link class="nav-link text-white" to="/aboutus">About Us</router-link>
           </li>
           <li class="nav-item">
+            <router-link class="nav-link text-white" to="/contactus">Contact Us</router-link>
+          </li>
+          <li class="nav-item">
             <router-link class="nav-link text-white" to="/dashboard">Dashboard</router-link>  
           </li>
         </ul>

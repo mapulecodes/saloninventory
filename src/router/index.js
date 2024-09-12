@@ -35,7 +35,18 @@ const routes = [
     name: 'aboutus',
     component: () => import('@/views/AboutusView.vue')
   },
+  {
+    path: '/contactus',
+    name: 'contactus',
+    component: () => import('@/views/ContactUsView.vue')
+  },
+  // {
+  //   path: '/shiftschedule',
+  //   name: 'shiftschedule',
+  //   component: () => import('@/views/ShiftScheduleView.vue')
+  // },
   
+
 ]
 
 const router = createRouter({
