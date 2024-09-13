@@ -30,11 +30,15 @@
           </router-link>
         </li>
         <li>
-  <router-link to="/shiftschedule">
-    <i class="fas fa-calendar-alt"></i> Schedule Shifts
-  </router-link>
-</li>
-
+          <router-link to="/shiftschedule">
+            <i class="fas fa-calendar-alt"></i> Schedule Shifts
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/admin">
+            <i class="fas fa-cog"></i> Admin
+          </router-link>
+        </li>
       </ul>
     </aside>
 
@@ -151,10 +155,10 @@ export default {
 
 .side-nav {
   position: fixed;
-  top: 60px; 
+  top: 60px;
   left: 0;
   width: 200px;
-  height: calc(100% - 60px); 
+  height: calc(100% - 60px);
   background-color: #001f4d;
   padding-top: 20px;
 }
@@ -181,8 +185,8 @@ export default {
 }
 
 .main-content {
-  margin-top: 60px; 
-  margin-left: 200px; 
+  margin-top: 60px;
+  margin-left: 200px;
   padding: 20px;
   flex-grow: 1;
 }

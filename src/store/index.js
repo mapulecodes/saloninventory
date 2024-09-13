@@ -7,9 +7,9 @@ const apiURL = "https://saloninventory.onrender.com";
 
 export default createStore({
   state: {
-    products: null,
-    users: null,
-    customers: null,  // Add customers state
+    products: [],
+    users: [],
+    customers: [],
     currentUser: null,
     product: null,
     isLoading: false,
@@ -24,7 +24,7 @@ export default createStore({
     setUsers(state, value) {
       state.users = value;
     },
-    setCustomers(state, value) {  // Mutation to update customers state
+    setCustomers(state, value) {
       state.customers = value;
     },
     setCurrentUser(state, value) {
@@ -39,7 +39,11 @@ export default createStore({
       commit("setLoading", true);
       try {
         const { data: { results } } = await axios.get(`${apiURL}/products`);
-        commit("setProducts", results);
+        const validatedProducts = results.map(product => ({
+          ...product,
+          Price: Number(product.Price) || 0,
+        }));
+        commit("setProducts", validatedProducts);
         toast.success("Products fetched successfully!");
       } catch (error) {
         console.error(error);
@@ -63,7 +67,7 @@ export default createStore({
       }
     },
 
-    async fetchCustomers({ commit }) {  // Action to fetch customers
+    async fetchCustomers({ commit }) {
       commit("setLoading", true);
       try {
         const { data: { results } } = await axios.get(`${apiURL}/customers`);
@@ -87,21 +91,18 @@ export default createStore({
         toast.error("Login failed. Please check your credentials.");
       }
     },
-
-    // Additional actions for adding, deleting users/products...
-
   },
   getters: {
     recentProducts: (state) => {
       if (Array.isArray(state.products)) {
-        return state.products.slice(0, 5); // Return the first 5 products
+        return state.products.slice(0, 5);
       }
-      return []; // Return an empty array if products is not an array
+      return [];
     },
     allUsers: (state) => {
       return Array.isArray(state.users) ? state.users : [];
     },
-    allCustomers: (state) => {  // Getter to access customers
+    allCustomers: (state) => {
       return Array.isArray(state.customers) ? state.customers : [];
     },
     currentProduct: (state) => {

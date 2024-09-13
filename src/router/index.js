@@ -45,6 +45,12 @@ const routes = [
     name: 'shiftschedule',
     component: () => import('@/views/ShiftScheduleView.vue')
   },
+  {
+    path: '/admin',
+    name: 'sadmin',
+    component: () => import('@/views/AdminView.vue')
+  },
+  
   
 
 ]
