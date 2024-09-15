@@ -18,9 +18,6 @@
           <li class="nav-item">
             <router-link class="nav-link text-white" to="/contactus">Contact Us</router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link text-white" to="/dashboard">Dashboard</router-link>  
-          </li>
         </ul>
         <div class="d-flex">
           <router-link to="/login" class="btn btn-outline-light me-2">Login</router-link>

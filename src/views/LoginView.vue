@@ -3,9 +3,28 @@
     <div class="login-container">
       <h1 class="login-title">Login</h1>
       <form @submit.prevent="loginUser">
-        <input type="email" placeholder="Email" v-model="user_email" />
-        <input type="password" placeholder="Password" v-model="user_password" />
-        <button type="submit" class="btn-text">Login</button>
+        <input
+          type="email"
+          placeholder="Email"
+          v-model="user_email"
+          @blur="validateEmail"
+          :class="{'input-error': emailError}"
+        />
+        <span v-if="emailError" class="error">{{ emailError }}</span>
+
+        <input
+          type="password"
+          placeholder="Password"
+          v-model="user_password"
+          @blur="validatePassword"
+          :class="{'input-error': passwordError}"
+        />
+        <span v-if="passwordError" class="error">{{ passwordError }}</span>
+
+        <button type="submit" class="btn-text" :disabled="loading">
+          <span v-if="loading">Logging in...</span>
+          <span v-else>Login</span>
+        </button>
       </form>
 
       <div class="register-link">
@@ -13,52 +32,76 @@
           <button @click="goToRegister" class="btn-register">Register</button>
         </p>
       </div>
+      
+      <!-- Admin Info Button -->
+      <button @click="generateAdminInfoPDF" class="btn-text">Admin Info</button>
     </div>
   </div>
 </template>
 
 <script>
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 export default {
   data() {
     return {
       user_email: '',
-      user_password: ''
+      user_password: '',
+      emailError: '',
+      passwordError: '',
+      loading: false
     };
   },
   methods: {
-    async loginUser() {
-      const userData = {
-        email: this.user_email,
-        password: this.user_password
-      };
-
-      try {
-        // Send user data to the backend (adjust the URL to match your API)
-        const response = await fetch('/api/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(userData)
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          // On successful login, store token or user data and redirect to the dashboard
-          localStorage.setItem('token', result.token); // Assuming token is returned from the API
-          this.$router.push('/dashboard');
-        } else {
-          // Handle invalid login credentials
-          alert(result.message || 'Login failed. Please check your credentials.');
-        }
-      } catch (error) {
-        console.error('Login error:', error);
-        alert('An error occurred during login');
+    validateEmail() {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!this.user_email) {
+        this.emailError = "Email is required.";
+      } else if (!emailPattern.test(this.user_email)) {
+        this.emailError = "Invalid email format.";
+      } else {
+        this.emailError = "";
       }
     },
+    validatePassword() {
+      if (!this.user_password) {
+        this.passwordError = "Password is required.";
+      } else if (this.user_password.length < 6) {
+        this.passwordError = "Password must be at least 6 characters.";
+      } else {
+        this.passwordError = "";
+      }
+    },
+    async loginUser() {
+      this.validateEmail();
+      this.validatePassword();
+      if (this.emailError || this.passwordError) return;
+
+      const adminEmail = 'mapule@gmail.com';
+      const adminPassword = 'lifechoices';
+
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
+        if (this.user_email === adminEmail && this.user_password === adminPassword) {
+          alert('Login successful!');
+          localStorage.setItem('adminLoggedIn', true);
+          this.$router.push('/dashboard');
+        } else {
+          alert('Invalid email or password.');
+        }
+      }, 1500); // Simulating network request
+    },
     goToRegister() {
-      this.$router.push('/register'); 
+      this.$router.push('/register');
+    },
+    generateAdminInfoPDF() {
+      const doc = new jsPDF();
+      doc.text('Admin Login Information', 14, 16);
+      doc.text(`Email: mapule@gmail.com`, 14, 30);
+      doc.text(`Password: lifechoices`, 14, 40);
+      doc.save('admin-info.pdf');
     }
   }
 };
@@ -71,36 +114,37 @@ export default {
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: linear-gradient(to right, #001f4d, #666e7a, #3f1d5a); 
 }
 
 .login-container {
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
   padding: 30px;
   background-color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   text-align: center;
-  margin-top: -50px;
 }
 
 .login-title {
   font-size: 28px;
-  color: #000;
   margin-bottom: 20px;
 }
 
-input[type="email"],
-input[type="password"] {
+input {
   width: 100%;
   margin-bottom: 15px;
   border: none;
   border-bottom: 2px solid #666e7a;
 }
 
-input:focus {
-  border-bottom: 2px solid #554671;
-  outline: none;
+.input-error {
+  border-bottom-color: rgb(43, 19, 83);
+}
+
+.error {
+  color: red;
+  font-size: 12px;
 }
 
 .btn-text, .btn-register {
@@ -126,5 +170,11 @@ input::placeholder {
 
 .register-link p {
   color: #000; 
+}
+
+@media (max-width: 500px) {
+  .login-container {
+    width: 90%;
+  }
 }
 </style>

@@ -7,6 +7,3 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 
 
 createApp(App).use(store).use(router).mount('#app')
-
-
-
