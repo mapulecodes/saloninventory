@@ -25,8 +25,8 @@
           </router-link>
         </li>
         <li>
-          <router-link to="/dashboard/team">
-            <i class="fas fa-users"></i> Team
+          <router-link to="/account">
+            <i class="fas fa-users"></i> account
           </router-link>
         </li>
         <li>

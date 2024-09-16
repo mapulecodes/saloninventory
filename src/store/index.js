@@ -11,27 +11,23 @@ export default createStore({
     users: [],
     customers: [],
     currentUser: null,
-    product: null,
     isLoading: false,
   },
   mutations: {
-    setProducts(state, value) {
-      state.products = value;
+    setProducts(state, products) {
+      state.products = products;
     },
-    setProduct(state, value) {
-      state.product = value;
+    setUsers(state, users) {
+      state.users = users;
     },
-    setUsers(state, value) {
-      state.users = value;
+    setCustomers(state, customers) {
+      state.customers = customers;
     },
-    setCustomers(state, value) {
-      state.customers = value;
+    setCurrentUser(state, user) {
+      state.currentUser = user;
     },
-    setCurrentUser(state, value) {
-      state.currentUser = value;
-    },
-    setLoading(state, value) {
-      state.isLoading = value;
+    setLoading(state, isLoading) {
+      state.isLoading = isLoading;
     },
   },
   actions: {
@@ -39,11 +35,7 @@ export default createStore({
       commit("setLoading", true);
       try {
         const { data: { results } } = await axios.get(`${apiURL}/products`);
-        const validatedProducts = results.map(product => ({
-          ...product,
-          Price: Number(product.Price) || 0,
-        }));
-        commit("setProducts", validatedProducts);
+        commit("setProducts", results);
         toast.success("Products fetched successfully!");
       } catch (error) {
         console.error(error);
@@ -52,7 +44,6 @@ export default createStore({
         commit("setLoading", false);
       }
     },
-
     async fetchUsers({ commit }) {
       commit("setLoading", true);
       try {
@@ -66,7 +57,6 @@ export default createStore({
         commit("setLoading", false);
       }
     },
-
     async fetchCustomers({ commit }) {
       commit("setLoading", true);
       try {
@@ -80,7 +70,6 @@ export default createStore({
         commit("setLoading", false);
       }
     },
-
     async login({ commit }, credentials) {
       try {
         const { data } = await axios.post(`${apiURL}/login`, credentials);
@@ -93,24 +82,10 @@ export default createStore({
     },
   },
   getters: {
-    recentProducts: (state) => {
-      if (Array.isArray(state.products)) {
-        return state.products.slice(0, 5);
-      }
-      return [];
-    },
-    allUsers: (state) => {
-      return Array.isArray(state.users) ? state.users : [];
-    },
-    allCustomers: (state) => {
-      return Array.isArray(state.customers) ? state.customers : [];
-    },
-    currentProduct: (state) => {
-      return state.product;
-    },
-    currentUser: (state) => {
-      return state.currentUser;
-    },
+    recentProducts: (state) => state.products.slice(0, 5),
+    allUsers: (state) => state.users,
+    allCustomers: (state) => state.customers,
+    currentUser: (state) => state.currentUser,
     isLoading: (state) => state.isLoading,
   },
 });

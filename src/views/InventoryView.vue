@@ -15,8 +15,13 @@
     <div class="main-content">
       <h2>Inventory</h2>
 
+      <!-- Spinner for loading -->
+      <div v-if="loading" class="spinner">
+        <p>Loading...</p>
+      </div>
+
       <!-- Search Bar -->
-      <div class="search-bar">
+      <div class="search-bar" v-if="!loading">
         <input 
           type="text" 
           v-model="searchQuery" 
@@ -27,7 +32,7 @@
       </div>
 
       <!-- Products Table -->
-      <div class="product-table">
+      <div class="product-table" v-if="!loading">
         <table>
           <thead>
             <tr>
@@ -41,9 +46,8 @@
             <tr v-if="filteredProducts.length === 0">
               <td colspan="4">No products found.</td>
             </tr>
-            <tr v-for="product in filteredProducts" :key="product.ID">
+            <tr v-for="product in filteredProducts" :key="product.ID" @click="viewProduct(product.ID)">
               <td>
-              
                 <img 
                   :src="getImageLink(product.ProductName)" 
                   class="media-fluid img-fluid" 
@@ -70,7 +74,8 @@ export default {
   data() {
     return {
       searchQuery: '',
-      filteredProducts: []
+      filteredProducts: [],
+      loading: true // Added a loading state
     };
   },
   computed: {
@@ -85,8 +90,6 @@ export default {
   },
   methods: {
     ...mapActions(['fetchProducts']),
-    
- 
     getImageLink(productName) {
       switch (productName) {
         case 'Shampoo':
@@ -95,12 +98,10 @@ export default {
           return 'https://mapulecodes.github.io/fridayimages/images/conditioner.png';  
         case 'Hair Dryer':
           return 'https://mapulecodes.github.io/fridayimages/images/hairdryer.png';  
-       
         default:
           return 'https://via.placeholder.com/50';  
       }
     },
-
     searchProducts() {
       if (this.searchQuery.trim()) {
         this.filteredProducts = this.products.filter(product =>
@@ -109,20 +110,32 @@ export default {
       } else {
         this.filteredProducts = this.products;
       }
+    },
+    viewProduct(productId) {
+      this.$router.push({ name: 'singleitemview', params: { id: productId } });
     }
   },
   mounted() {
     this.fetchProducts().then(() => {
       this.filteredProducts = this.products; 
+      this.loading = false; // Stop the loading spinner after fetching products
     });
   }
 };
 </script>
 
+
+
 <style scoped>
 .inventory-container {
   display: flex;
   flex-direction: column;
+}
+
+.spinner {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
 }
 
 .top-nav {

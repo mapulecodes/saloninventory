@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "production": "saloninventory-2ab75"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}
